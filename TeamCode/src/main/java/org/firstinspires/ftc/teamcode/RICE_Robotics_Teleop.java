@@ -114,7 +114,7 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
-            //robotwaitForTick(40);
+            //Function in hardware class
             robot.waitForTick(40);
         }
     }
