@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Ananth V on 9/1/2017.
@@ -14,7 +15,7 @@ public class HardwareRiceRavens {
     DcMotor rightMotor_upper  = null;
 
     HardwareMap map = null;
-
+    Servo servo; Servo servo2;
     private DcMotor.RunMode initialMode = null;
     private ElapsedTime period  = new ElapsedTime();
 
@@ -35,6 +36,9 @@ public class HardwareRiceRavens {
 
         leftMotor_upper.setDirection(DcMotorSimple.Direction.REVERSE);
         rightMotor_upper.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        servo = map.get(Servo.class, "left");
+        servo2 = map.get(Servo.class, "right");
 
         stopRobot();
     }

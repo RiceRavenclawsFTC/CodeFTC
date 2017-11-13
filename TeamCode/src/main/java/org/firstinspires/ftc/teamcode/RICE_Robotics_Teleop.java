@@ -1,3 +1,4 @@
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -31,20 +32,20 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+        package org.firstinspires.ftc.teamcode;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorSimple;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.util.Range;
+        import com.qualcomm.robotcore.util.RobotLog;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.HardwareMap;
+        import com.qualcomm.robotcore.hardware.Servo;
+        import com.qualcomm.robotcore.util.ElapsedTime;
+        import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * Created by Ananth V on 9/1/2017.
@@ -55,9 +56,11 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareRiceRavens robot           = new HardwareRiceRavens(DcMotor.RunMode.RUN_WITHOUT_ENCODER);   // Use a Pushbot's hardware
-                                                               // could also use HardwarePushbotMatrix class.
+    // could also use HardwarePushbotMatrix class.
     double          clawOffset      = 0;                       // Servo mid position
     final double    CLAW_SPEED      = 0.50;                  // sets rate to move servo
+    double servo;
+    double servo2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,7 +72,8 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        robot.servo.setPosition(0.5);
+        robot.servo2.setPosition(0.5);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
@@ -88,6 +92,28 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
 
             robot.leftMotor_upper.setPower(left);
             robot.rightMotor_upper.setPower(right);
+            servo = robot.servo.getPosition();
+            servo2 = robot.servo2.getPosition();
+            if(gamepad1.y) {
+                // move to 0 degrees.
+                servo -= 0.1;
+                servo2 += 0.1;
+            } else if (gamepad1.x || gamepad1.b) {
+                // move to 90 degrees.
+                robot.servo.setPosition(0.5);
+                robot.servo2.setPosition(0.5);
+            } else if (gamepad1.a) {
+                // move to 180 degrees.
+                servo += 0.1;
+                servo2 -= 0.1;
+            }
+            servo = Range.clip(servo, 0, 0.5);
+            servo2 = Range.clip(servo2, 0.5, 1);
+            robot.servo.setPosition(servo);
+            robot.servo2.setPosition(servo2);
+            telemetry.addData("Servo Position", robot.servo.getPosition());
+            telemetry.addData("Servo Position2", robot.servo2.getPosition());
+            telemetry.addData("Status", "Running");
 
             // Use gamepad left & right Bumpers to open and close the claw
 
