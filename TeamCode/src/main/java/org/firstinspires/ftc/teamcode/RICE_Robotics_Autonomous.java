@@ -24,14 +24,14 @@ public class RICE_Robotics_Autonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor_upper = null;
-    DcMotor rightMotor_upper  = null;
+    DcMotor motor1 = null;
+    DcMotor motor2  = null;
 
     HardwareRiceRavens robot  = new HardwareRiceRavens(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     public void drive(double ld, double rd, long time){
-        robot.leftMotor_upper.setPower(ld);
-        robot.rightMotor_upper.setPower(rd);
+        robot.motor1.setPower(ld);
+        robot.motor2.setPower(rd);
         sleep(time);
     }
 

@@ -33,38 +33,33 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
         package org.firstinspires.ftc.teamcode;
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.DcMotorSimple;
-        import com.qualcomm.robotcore.util.ElapsedTime;
-        import com.qualcomm.robotcore.util.Range;
-        import com.qualcomm.robotcore.util.RobotLog;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.HardwareMap;
-        import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.util.ElapsedTime;
-        import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Ananth V on 9/1/2017.
  */
 
-@TeleOp(name="Bubbles TeleOp", group="Linear OpMode")
-public class RICE_Robotics_Teleop extends LinearOpMode {
+@TeleOp(name="Bubbles TeleOp2 Froof", group="Linear OpMode")
+public class RICE_Robotics_Teleop2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareRiceRavens robot           = new HardwareRiceRavens(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //Use Custom Hardware
-
+    // could also use HardwarePushbotMatrix class.
+    double          clawOffset      = 0;                       // Servo mid position
+    final double    CLAW_SPEED      = 0.50;                  // sets rate to move servo
     double servo;
     double servo2;
-    double armPosition;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double left;
+        double up;
         double right;
+        double motor3;
+        double motor4;
         double max;
 
         /* Initialize the hardware variables.
@@ -85,14 +80,12 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            left = -gamepad1.left_stick_y + gamepad1.right_stick_x;
-            right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
+            up = gamepad1.left_stick_y;
+            right = gamepad1.right_stick_x;
 
-            armPosition = gamepad1.right_stick_y;
 
-            robot.motor1.setPower(left);
-            robot.motor2.setPower(right);
-            robot.motor3.setPower(armPosition);
+            robot.motor3.setPower(up);
+            robot.motor4.setPower(right);
             servo = robot.servo.getPosition();
             servo2 = robot.servo2.getPosition();
             if(gamepad1.y) {
@@ -116,8 +109,27 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
             telemetry.addData("Servo Position2", robot.servo2.getPosition());
             telemetry.addData("Status", "Running");
 
+            // Use gamepad left & right Bumpers to open and close the claw
 
-            telemetry.addData("left", "%.2f", left);
+            /*
+            if (gamepad1.right_bumper)
+                clawOffset += CLAW_SPEED;
+            else if (gamepad1.left_bumper)
+                clawOffset -= CLAW_SPEED;
+            */
+
+            // Use gamepad to move shooter by gamepad stick
+            // robot.armMotor.setPower(gamepad2.left_stick_y);
+
+            // Use gamepad button to turn spindle on and off
+            // if (gamepad2.x)
+            //     robot.spindleMotor.setPower(1);
+            // else if (gamepad2.y)
+            //     robot.spindleMotor.setPower(0);
+
+            // Send telemetry message to signify robot running;
+            // telemetry.addData("claw", "Offset = %.2f", clawOffset);
+            telemetry.addData("up", "%.2f", up);
             telemetry.addData("right", "%.2f", right);
             telemetry.update();
 
