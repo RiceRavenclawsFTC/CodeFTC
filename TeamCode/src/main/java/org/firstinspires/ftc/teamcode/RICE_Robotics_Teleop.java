@@ -85,10 +85,16 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            left = -gamepad1.left_stick_y + gamepad1.right_stick_x;
-            right = -gamepad1.left_stick_y - gamepad1.right_stick_x;
+            left = -gamepad1.left_stick_y * 0.7 - gamepad1.right_stick_x * 0.6;
+            right = -gamepad1.left_stick_y * 0.7 + gamepad1.right_stick_x * 0.6;
 
-            armPosition = gamepad1.right_stick_y;
+            armPosition = 0;
+            if (gamepad1.dpad_up) {
+                armPosition = 0.75;
+            }
+            if (gamepad1.dpad_down) {
+                armPosition = -0.75;
+            }
 
             robot.motor1.setPower(left);
             robot.motor2.setPower(right);
@@ -97,16 +103,16 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
             servo2 = robot.servo2.getPosition();
             if(gamepad1.y) {
                 // move to 0 degrees.
-                servo -= 0.1;
-                servo2 += 0.1;
+                servo += 0.1;
+                servo2 -= 0.1;
             } else if (gamepad1.x || gamepad1.b) {
                 // move to 90 degrees.
                 robot.servo.setPosition(0.5);
                 robot.servo2.setPosition(0.5);
             } else if (gamepad1.a) {
                 // move to 180 degrees.
-                servo += 0.1;
-                servo2 -= 0.1;
+                servo -= 0.1;
+                servo2 += 0.1;
             }
             servo = Range.clip(servo, 0, 0.5);
             servo2 = Range.clip(servo2, 0.5, 1);
