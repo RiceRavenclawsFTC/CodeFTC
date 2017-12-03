@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * Created by Ananth V on 9/1/2017.
@@ -15,6 +18,7 @@ public class HardwareRiceRavens {
     DcMotor motor2  = null; // right motor
     DcMotor motor3 = null; //test motor for now
     DcMotor motor4  = null; //test motor for now
+    ColorSensor ColorSensor = null;
 
     HardwareMap map = null;
     Servo servo; Servo servo2;
@@ -32,6 +36,7 @@ public class HardwareRiceRavens {
         motor2 = map.dcMotor.get("motor2");
         motor3 = map.dcMotor.get("motor3"); //sets leftmotor from name of motor on phone
         motor4 = map.dcMotor.get("motor4");
+        ColorSensor = map.get(ColorSensor.class, "color_sensor");
         motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,6 +51,8 @@ public class HardwareRiceRavens {
         motor2.setDirection(DcMotorSimple.Direction.FORWARD);
         motor3.setDirection(DcMotorSimple.Direction.FORWARD);
         motor4.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         servo = map.get(Servo.class, "left");
         servo2 = map.get(Servo.class, "right");

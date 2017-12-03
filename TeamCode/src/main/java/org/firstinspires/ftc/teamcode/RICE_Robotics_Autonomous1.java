@@ -55,7 +55,13 @@ public class RICE_Robotics_Autonomous1 extends LinearOpMode {
          * step (using the FTC Robot Controller app on the phone).
          */
         robot.init(hardwareMap);
-
+        if (robot.ColorSensor.blue() > robot.ColorSensor.red()) {
+            telemetry.addData("Color", "Blue");
+        }
+        else if (robot.ColorSensor.red() > robot.ColorSensor.blue()) {
+            telemetry.addData("Color", "Red");
+        }
+        telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -64,8 +70,7 @@ public class RICE_Robotics_Autonomous1 extends LinearOpMode {
         if (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
-            drive(1, 1, 1000);
-            drive(-1, 1, 700);
+            drive(0.5, 0.5, 1500);
             robot.stopRobot();
         }
     }

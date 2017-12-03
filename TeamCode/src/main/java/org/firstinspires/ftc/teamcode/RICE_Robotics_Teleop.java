@@ -65,7 +65,7 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         double left;
         double right;
-        double max;
+        double armspeed;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -87,32 +87,31 @@ public class RICE_Robotics_Teleop extends LinearOpMode {
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             left = -gamepad1.left_stick_y * 0.7 - gamepad1.right_stick_x * 0.6;
             right = -gamepad1.left_stick_y * 0.7 + gamepad1.right_stick_x * 0.6;
-
-            armPosition = 0;
-            if (gamepad1.dpad_up) {
-                armPosition = 0.75;
-            }
-            if (gamepad1.dpad_down) {
-                armPosition = -0.75;
-            }
+            armspeed = -gamepad2.right_stick_y * 0.3;
 
             robot.motor1.setPower(left);
             robot.motor2.setPower(right);
-            robot.motor3.setPower(armPosition);
+            robot.motor3.setPower(armspeed);
             servo = robot.servo.getPosition();
             servo2 = robot.servo2.getPosition();
-            if(gamepad1.y) {
+            if(gamepad2.y) {
                 // move to 0 degrees.
-                servo += 0.1;
-                servo2 -= 0.1;
-            } else if (gamepad1.x || gamepad1.b) {
+                servo += 0.075;
+                servo2 -= 0.075;
+            } else if (gamepad2.x) {
                 // move to 90 degrees.
-                robot.servo.setPosition(0.5);
-                robot.servo2.setPosition(0.5);
-            } else if (gamepad1.a) {
+                servo += 0.05;
+            } else if (gamepad2.b) {
                 // move to 180 degrees.
-                servo -= 0.1;
-                servo2 += 0.1;
+                servo2 -= 0.05;
+            } else if (gamepad2.a) {
+                // move to 180 degrees.
+                servo -= 0.075;
+                servo2 += 0.075;
+            } else if (gamepad2.left_bumper) {
+                // move to 180 degrees.
+                servo = 0.5;
+                servo2 = 0.5;
             }
             servo = Range.clip(servo, 0, 0.5);
             servo2 = Range.clip(servo2, 0.5, 1);
