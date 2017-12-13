@@ -29,9 +29,13 @@ public class RICE_Robotics_Autonomous1 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor motor1 = null;
     DcMotor motor2  = null;
+    String teamcolor = null;
 
     HardwareRiceRavens robot  = new HardwareRiceRavens(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+    public void drive(double ld, double rd){
+        robot.motor1.setPower(ld);
+        robot.motor2.setPower(rd);
+    }
     public void drive(double ld, double rd, long time){
         robot.motor1.setPower(ld);
         robot.motor2.setPower(rd);
@@ -56,11 +60,12 @@ public class RICE_Robotics_Autonomous1 extends LinearOpMode {
          */
         robot.init(hardwareMap);
         if (robot.ColorSensor.blue() > robot.ColorSensor.red()) {
-            telemetry.addData("Color", "Blue");
+            teamcolor = "blue";
         }
         else if (robot.ColorSensor.red() > robot.ColorSensor.blue()) {
-            telemetry.addData("Color", "Red");
+            teamcolor = "red";
         }
+        telemetry.addData("Status", "Color: " + teamcolor);
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -68,10 +73,89 @@ public class RICE_Robotics_Autonomous1 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         if (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-            drive(0.5, 0.5, 1500);
+            //drive forward until the robot is off the balancing stone
+            if (teamcolor.equals("blue")) {
+                while ((robot.ColorSensor.blue() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.blue() > robot.ColorSensor.red() + 10))  {
+                    drive(0.5, 0.5);
+                }
+
+            }
+            else if (teamcolor.equals("red")) {
+                while ((robot.ColorSensor.red() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.red() > robot.ColorSensor.blue() + 10) ) {
+                    drive(0.5, 0.5);
+                }
+            }
+
+
+
+            //drive slower if color is not detected - aka of the balancing stone
+            if (teamcolor.equals("blue")) {
+                while (!((robot.ColorSensor.blue() > robot.ColorSensor.green() + 10) &&
+                (robot.ColorSensor.blue() > robot.ColorSensor.red() + 10))) {
+                    drive(0.2, 0.2);
+                }
+            }
+            else if (teamcolor.equals("red")) {
+                while (!((robot.ColorSensor.red() > robot.ColorSensor.green() + 10) &&
+                (robot.ColorSensor.red() > robot.ColorSensor.blue() + 10)))  {
+                    drive(0.2, 0.2);
+                }
+            }
+
             robot.stopRobot();
+            //to prevent overshooting on target
+            if (teamcolor.equals("blue")) {
+                while (!((robot.ColorSensor.blue() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.blue() > robot.ColorSensor.red() + 10))) {
+                    drive(-0.075, -0.075);
+                }
+            }
+            else if (teamcolor.equals("red")) {
+                while (!((robot.ColorSensor.red() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.red() > robot.ColorSensor.blue() + 10)))  {
+                    drive(-0.075, 0.075);
+                }
+            }
+
+
+
+            //to turn 90 degrees correctly
+            if (teamcolor.equals("blue")) {
+                while (!((robot.ColorSensor.blue() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.blue() > robot.ColorSensor.red() + 10) &&
+                        (robot.ColorSensor2.blue() > robot.ColorSensor2.green() + 10) &&
+                        (robot.ColorSensor2.blue() > robot.ColorSensor2.green() + 10))) {
+                    drive(-0.075, 0.075);
+                }
+            }
+            else if (teamcolor.equals("red")) {
+                while (!((robot.ColorSensor.red() > robot.ColorSensor.green() + 10) &&
+                        (robot.ColorSensor.red() > robot.ColorSensor.blue() + 10) &&
+                        (robot.ColorSensor2.red() > robot.ColorSensor2.green() + 10) &&
+                        (robot.ColorSensor2.red() > robot.ColorSensor2.green() + 10)))  {
+                    drive(0.075, -0.075);
+                }
+            }
+
+
         }
+
+
+robot.stopRobot();
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
